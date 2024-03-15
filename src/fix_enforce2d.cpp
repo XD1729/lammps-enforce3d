@@ -17,6 +17,7 @@
 #include "atom.h"
 #include "domain.h"
 #include "error.h"
+#include "modify.h"
 #include "respa.h"
 #include "update.h"
 
@@ -53,8 +54,8 @@ int FixEnforce2D::setmask()
 
 void FixEnforce2D::init()
 {
-  if (domain->dimension == 3)
-    error->all(FLERR,"Cannot use fix enforce2d with 3d simulation");
+//  if (domain->dimension == 3)
+//    error->all(FLERR,"Cannot use fix enforce2d with 3d simulation");
 }
 
 /* ---------------------------------------------------------------------- */
@@ -85,6 +86,7 @@ void FixEnforce2D::min_setup(int vflag)
 void FixEnforce2D::post_force(int /*vflag*/)
 {
   double **v = atom->v;
+  double **x = atom->x;
   double **f = atom->f;
   int *mask = atom->mask;
   int nlocal = atom->nlocal;
@@ -94,6 +96,7 @@ void FixEnforce2D::post_force(int /*vflag*/)
     if (mask[i] & groupbit) {
       v[i][2] = 0.0;
       f[i][2] = 0.0;
+      x[i][2] = 0.0;
     }
 
   // for systems with omega/angmom/torque, zero x and y components
